@@ -1,0 +1,107 @@
+
+\documentclass{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+
+\begin{document}
+
+\section{BPPC-IF: Bin Packing Problem with Conflicts and Item Fragmentation}
+
+\subsection{Sets and parameters}
+
+\begin{itemize}
+    \item $V$: set of items;
+    \item $E$: set of conflicting pairs of items;
+    \item $\mathcal{U}$: set of bins;
+    \item $w_i$: size of item $i \in V$;
+    \item $W$: capacity of each bin.
+\end{itemize}
+
+The set of bins is defined as:
+
+\[
+U = \left\lceil \sum_{i \in V} \frac{w_i}{W} \right\rceil
+\]
+
+\[
+\mathcal{U} = \{1,2,\ldots,U\}
+\]
+
+\subsection{Decision variables}
+
+\[
+x_{ij} =
+\begin{cases}
+1 & \text{if a fragment of item } i
+\text{ is packed into bin } j,\\
+0 & \text{otherwise.}
+\end{cases}
+\qquad i \in V,\ j \in \mathcal{U}
+\]
+
+\[
+f_{ij} = \text{size of the fragment of item } i
+\text{ packed into bin } j
+\qquad i \in V,\ j \in \mathcal{U}
+\]
+
+\[
+y_j =
+\begin{cases}
+1 & \text{if bin } j \text{ is used},\\
+0 & \text{otherwise.}
+\end{cases}
+\qquad j \in \mathcal{U}
+\]
+
+\subsection{Mathematical formulation}
+
+\begin{equation}
+\text{MIP:} \qquad
+\min \sum_{j \in \mathcal{U}} y_j
+\end{equation}
+
+subject to:
+
+\begin{align}
+\sum_{i \in V} f_{ij}
+&\leq W y_j
+&& j \in \mathcal{U}
+\tag{3}\\[6pt]
+\sum_{j \in \mathcal{U}} f_{ij}
+&= w_i
+&& i \in V
+\tag{4}\\[6pt]
+f_{ij}
+&\leq w_i x_{ij}
+&& i \in V,\ j \in \mathcal{U}
+\tag{5}\\[6pt]
+x_{ij} + x_{kj}
+&\leq y_j
+&& (i,k) \in E,\ j \in \mathcal{U}
+\tag{6}\\[6pt]
+\sum_{i \in V} f_{ij}
+&\leq \sum_{i \in V} f_{i,j-1}
+&& j \in \mathcal{U} \setminus \{1\}
+\tag{7}\\[6pt]
+x_{ij}
+&\leq y_j
+&& i \in V,\ j \in \mathcal{U}
+\tag{8}\\[6pt]
+x_{ij}
+&\in \{0,1\}
+&& i \in V,\ j \in \mathcal{U}
+\tag{9}\\[6pt]
+f_{ij}
+&\geq 0
+&& i \in V,\ j \in \mathcal{U}
+\tag{10}\\[6pt]
+y_j
+&\in \{0,1\}
+&& j \in \mathcal{U}
+\tag{11}
+\end{align}
+
+\end{document}
+
