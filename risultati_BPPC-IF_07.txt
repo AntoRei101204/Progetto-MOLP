@@ -1,0 +1,314 @@
+========== RISULTATO MODELLO MILP ==========
+MILP non risolto da Xpress.
+Motivo: ?120 Error: Problem has too many rows and columns. The maximum is 5000
+First Fit e Next Fit verranno comunque eseguiti.
+
+
+Soluzione Euristica First Fit:
+	Ordine oggetti = decrescente
+	Tempo impiegato = 0.000286 secondi
+	Soluzione ammissibile
+	Valore funzione obiettivo = 24
+
+========== DETTAGLI DELLA SOLUZIONE ==========
+	Bin 1: carico = 100.000, oggetti = ['O02', 'O09']
+	Oggetto O02: frammento = 77.000
+	Oggetto O09: frammento = 23.000
+	Bin 2: carico = 100.000, oggetti = ['O12', 'O28']
+	Oggetto O12: frammento = 77.000
+	Oggetto O28: frammento = 23.000
+	Bin 3: carico = 100.000, oggetti = ['O23', 'O25']
+	Oggetto O23: frammento = 77.000
+	Oggetto O25: frammento = 23.000
+	Bin 4: carico = 100.000, oggetti = ['O19', 'O01']
+	Oggetto O19: frammento = 76.000
+	Oggetto O01: frammento = 24.000
+	Bin 5: carico = 100.000, oggetti = ['O10', 'O07']
+	Oggetto O10: frammento = 72.000
+	Oggetto O07: frammento = 28.000
+	Bin 6: carico = 100.000, oggetti = ['O26', 'O25']
+	Oggetto O26: frammento = 71.000
+	Oggetto O25: frammento = 29.000
+	Bin 7: carico = 100.000, oggetti = ['O09', 'O15']
+	Oggetto O09: frammento = 47.000
+	Oggetto O15: frammento = 53.000
+	Bin 8: carico = 100.000, oggetti = ['O17', 'O32']
+	Oggetto O17: frammento = 67.000
+	Oggetto O32: frammento = 33.000
+	Bin 9: carico = 100.000, oggetti = ['O20', 'O11']
+	Oggetto O20: frammento = 67.000
+	Oggetto O11: frammento = 33.000
+	Bin 10: carico = 100.000, oggetti = ['O06', 'O22']
+	Oggetto O06: frammento = 63.000
+	Oggetto O22: frammento = 37.000
+	Bin 11: carico = 100.000, oggetti = ['O21', 'O31']
+	Oggetto O21: frammento = 63.000
+	Oggetto O31: frammento = 37.000
+	Bin 12: carico = 90.000, oggetti = ['O01', 'O13']
+	Oggetto O01: frammento = 50.000
+	Oggetto O13: frammento = 40.000
+	Bin 13: carico = 84.000, oggetti = ['O24', 'O18']
+	Oggetto O24: frammento = 46.000
+	Oggetto O18: frammento = 38.000
+	Bin 14: carico = 62.000, oggetti = ['O29', 'O04']
+	Oggetto O29: frammento = 49.000
+	Oggetto O04: frammento = 13.000
+	Bin 15: carico = 53.000, oggetti = ['O27', 'O30']
+	Oggetto O27: frammento = 29.000
+	Oggetto O30: frammento = 24.000
+	Bin 16: carico = 46.000, oggetti = ['O05']
+	Oggetto O05: frammento = 46.000
+	Bin 17: carico = 43.000, oggetti = ['O22', 'O28']
+	Oggetto O22: frammento = 19.000
+	Oggetto O28: frammento = 24.000
+	Bin 18: carico = 39.000, oggetti = ['O14']
+	Oggetto O14: frammento = 39.000
+	Bin 19: carico = 29.000, oggetti = ['O25', 'O03']
+	Oggetto O25: frammento = 3.000
+	Oggetto O03: frammento = 26.000
+	Bin 20: carico = 29.000, oggetti = ['O32', 'O16']
+	Oggetto O32: frammento = 6.000
+	Oggetto O16: frammento = 23.000
+	Bin 21: carico = 18.000, oggetti = ['O15', 'O07']
+	Oggetto O15: frammento = 1.000
+	Oggetto O07: frammento = 17.000
+	Bin 22: carico = 18.000, oggetti = ['O08']
+	Oggetto O08: frammento = 18.000
+	Bin 23: carico = 17.000, oggetti = ['O11']
+	Oggetto O11: frammento = 17.000
+	Bin 24: carico = 9.000, oggetti = ['O31']
+	Oggetto O31: frammento = 9.000
+
+
+Soluzione Euristica Next Fit:
+	Ordine oggetti = decrescente
+	Tempo impiegato = 0.000107 secondi
+	Soluzione ammissibile
+	Valore funzione obiettivo = 32
+
+========== DETTAGLI DELLA SOLUZIONE ==========
+	Bin 1: carico = 100.000, oggetti = ['O19', 'O01']
+	Oggetto O19: frammento = 76.000
+	Oggetto O01: frammento = 24.000
+	Bin 2: carico = 77.000, oggetti = ['O02']
+	Oggetto O02: frammento = 77.000
+	Bin 3: carico = 77.000, oggetti = ['O12']
+	Oggetto O12: frammento = 77.000
+	Bin 4: carico = 77.000, oggetti = ['O23']
+	Oggetto O23: frammento = 77.000
+	Bin 5: carico = 72.000, oggetti = ['O10']
+	Oggetto O10: frammento = 72.000
+	Bin 6: carico = 71.000, oggetti = ['O26']
+	Oggetto O26: frammento = 71.000
+	Bin 7: carico = 70.000, oggetti = ['O09']
+	Oggetto O09: frammento = 70.000
+	Bin 8: carico = 67.000, oggetti = ['O17']
+	Oggetto O17: frammento = 67.000
+	Bin 9: carico = 67.000, oggetti = ['O20']
+	Oggetto O20: frammento = 67.000
+	Bin 10: carico = 63.000, oggetti = ['O06']
+	Oggetto O06: frammento = 63.000
+	Bin 11: carico = 63.000, oggetti = ['O21']
+	Oggetto O21: frammento = 63.000
+	Bin 12: carico = 56.000, oggetti = ['O22']
+	Oggetto O22: frammento = 56.000
+	Bin 13: carico = 55.000, oggetti = ['O25']
+	Oggetto O25: frammento = 55.000
+	Bin 14: carico = 54.000, oggetti = ['O15']
+	Oggetto O15: frammento = 54.000
+	Bin 15: carico = 50.000, oggetti = ['O01']
+	Oggetto O01: frammento = 50.000
+	Bin 16: carico = 50.000, oggetti = ['O11']
+	Oggetto O11: frammento = 50.000
+	Bin 17: carico = 49.000, oggetti = ['O29']
+	Oggetto O29: frammento = 49.000
+	Bin 18: carico = 47.000, oggetti = ['O28']
+	Oggetto O28: frammento = 47.000
+	Bin 19: carico = 46.000, oggetti = ['O05']
+	Oggetto O05: frammento = 46.000
+	Bin 20: carico = 46.000, oggetti = ['O24']
+	Oggetto O24: frammento = 46.000
+	Bin 21: carico = 46.000, oggetti = ['O31']
+	Oggetto O31: frammento = 46.000
+	Bin 22: carico = 45.000, oggetti = ['O07']
+	Oggetto O07: frammento = 45.000
+	Bin 23: carico = 40.000, oggetti = ['O13']
+	Oggetto O13: frammento = 40.000
+	Bin 24: carico = 39.000, oggetti = ['O14']
+	Oggetto O14: frammento = 39.000
+	Bin 25: carico = 39.000, oggetti = ['O32']
+	Oggetto O32: frammento = 39.000
+	Bin 26: carico = 38.000, oggetti = ['O18']
+	Oggetto O18: frammento = 38.000
+	Bin 27: carico = 29.000, oggetti = ['O27']
+	Oggetto O27: frammento = 29.000
+	Bin 28: carico = 26.000, oggetti = ['O03']
+	Oggetto O03: frammento = 26.000
+	Bin 29: carico = 24.000, oggetti = ['O30']
+	Oggetto O30: frammento = 24.000
+	Bin 30: carico = 23.000, oggetti = ['O16']
+	Oggetto O16: frammento = 23.000
+	Bin 31: carico = 18.000, oggetti = ['O08']
+	Oggetto O08: frammento = 18.000
+	Bin 32: carico = 13.000, oggetti = ['O04']
+	Oggetto O04: frammento = 13.000
+
+========== MULTI-START E RICERCA LOCALE First Fit ==========
+Numero di partenze casuali = 100
+Seme casuale = 42
+Tentativi per bin da eliminare = 5
+Numero massimo di mosse per frammenti = 30
+Miglior First Fit randomizzato = 21 bin
+Miglior Multi-Start + ricerca locale = 20 bin
+Partenze migliorate dalla ricerca locale = 92/100
+Soluzione Euristica Multi-Start + Ricerca Locale:
+	Ordine oggetti = casuale
+	Tempo impiegato = 0.696013 secondi
+	Soluzione ammissibile
+	Valore funzione obiettivo = 20
+
+========== DETTAGLI DELLA SOLUZIONE ==========
+	Bin 1: carico = 100.000, oggetti = ['O14', 'O19']
+	Oggetto O14: frammento = 39.000
+	Oggetto O19: frammento = 61.000
+	Bin 2: carico = 100.000, oggetti = ['O20', 'O31']
+	Oggetto O20: frammento = 67.000
+	Oggetto O31: frammento = 33.000
+	Bin 3: carico = 100.000, oggetti = ['O29', 'O06']
+	Oggetto O29: frammento = 49.000
+	Oggetto O06: frammento = 51.000
+	Bin 4: carico = 100.000, oggetti = ['O05', 'O12']
+	Oggetto O05: frammento = 46.000
+	Oggetto O12: frammento = 54.000
+	Bin 5: carico = 100.000, oggetti = ['O26', 'O25']
+	Oggetto O26: frammento = 71.000
+	Oggetto O25: frammento = 29.000
+	Bin 6: carico = 100.000, oggetti = ['O23', 'O13']
+	Oggetto O23: frammento = 77.000
+	Oggetto O13: frammento = 23.000
+	Bin 7: carico = 100.000, oggetti = ['O17', 'O02']
+	Oggetto O17: frammento = 67.000
+	Oggetto O02: frammento = 33.000
+	Bin 8: carico = 99.000, oggetti = ['O07', 'O15']
+	Oggetto O07: frammento = 45.000
+	Oggetto O15: frammento = 54.000
+	Bin 9: carico = 94.000, oggetti = ['O11', 'O02']
+	Oggetto O11: frammento = 50.000
+	Oggetto O02: frammento = 44.000
+	Bin 10: carico = 91.000, oggetti = ['O01', 'O13']
+	Oggetto O01: frammento = 74.000
+	Oggetto O13: frammento = 17.000
+	Bin 11: carico = 85.000, oggetti = ['O22', 'O27']
+	Oggetto O22: frammento = 56.000
+	Oggetto O27: frammento = 29.000
+	Bin 12: carico = 85.000, oggetti = ['O04', 'O10']
+	Oggetto O04: frammento = 13.000
+	Oggetto O10: frammento = 72.000
+	Bin 13: carico = 84.000, oggetti = ['O24', 'O18']
+	Oggetto O24: frammento = 46.000
+	Oggetto O18: frammento = 38.000
+	Bin 14: carico = 83.000, oggetti = ['O31', 'O09']
+	Oggetto O31: frammento = 13.000
+	Oggetto O09: frammento = 70.000
+	Bin 15: carico = 78.000, oggetti = ['O21', 'O19']
+	Oggetto O21: frammento = 63.000
+	Oggetto O19: frammento = 15.000
+	Bin 16: carico = 70.000, oggetti = ['O28', 'O12']
+	Oggetto O28: frammento = 47.000
+	Oggetto O12: frammento = 23.000
+	Bin 17: carico = 62.000, oggetti = ['O16', 'O32']
+	Oggetto O16: frammento = 23.000
+	Oggetto O32: frammento = 39.000
+	Bin 18: carico = 52.000, oggetti = ['O25', 'O03']
+	Oggetto O25: frammento = 26.000
+	Oggetto O03: frammento = 26.000
+	Bin 19: carico = 30.000, oggetti = ['O06', 'O08']
+	Oggetto O06: frammento = 12.000
+	Oggetto O08: frammento = 18.000
+	Bin 20: carico = 24.000, oggetti = ['O30']
+	Oggetto O30: frammento = 24.000
+
+========== ITERATED LOCAL SEARCH ==========
+Numero iterazioni ILS = 100
+Seme casuale = 42
+Bin perturbati per iterazione = 3
+Probabilità accettazione peggioramenti = 0.10
+Soluzione iniziale FFD = 24 bin
+Migliore soluzione ILS = 20 bin
+Numero di miglioramenti globali = 1
+Numero di peggioramenti accettati = 0
+Soluzione Euristica Iterated Local Search:
+	Ordine oggetti = FFD + perturbazione + ricerca locale
+	Tempo impiegato = 0.444448 secondi
+	Soluzione ammissibile
+	Valore funzione obiettivo = 20
+
+========== DETTAGLI DELLA SOLUZIONE ==========
+	Bin 1: carico = 100.000, oggetti = ['O17', 'O32']
+	Oggetto O17: frammento = 67.000
+	Oggetto O32: frammento = 33.000
+	Bin 2: carico = 100.000, oggetti = ['O28', 'O22']
+	Oggetto O28: frammento = 47.000
+	Oggetto O22: frammento = 53.000
+	Bin 3: carico = 100.000, oggetti = ['O20', 'O11']
+	Oggetto O20: frammento = 67.000
+	Oggetto O11: frammento = 33.000
+	Bin 4: carico = 100.000, oggetti = ['O26', 'O25']
+	Oggetto O26: frammento = 71.000
+	Oggetto O25: frammento = 29.000
+	Bin 5: carico = 100.000, oggetti = ['O13', 'O23']
+	Oggetto O13: frammento = 40.000
+	Oggetto O23: frammento = 60.000
+	Bin 6: carico = 100.000, oggetti = ['O29', 'O06']
+	Oggetto O29: frammento = 49.000
+	Oggetto O06: frammento = 51.000
+	Bin 7: carico = 100.000, oggetti = ['O19', 'O01']
+	Oggetto O19: frammento = 26.000
+	Oggetto O01: frammento = 74.000
+	Bin 8: carico = 100.000, oggetti = ['O09', 'O14']
+	Oggetto O09: frammento = 70.000
+	Oggetto O14: frammento = 30.000
+	Bin 9: carico = 100.000, oggetti = ['O14', 'O21', 'O19']
+	Oggetto O14: frammento = 9.000
+	Oggetto O21: frammento = 63.000
+	Oggetto O19: frammento = 28.000
+	Bin 10: carico = 99.000, oggetti = ['O07', 'O15']
+	Oggetto O07: frammento = 45.000
+	Oggetto O15: frammento = 54.000
+	Bin 11: carico = 95.000, oggetti = ['O08', 'O12']
+	Oggetto O08: frammento = 18.000
+	Oggetto O12: frammento = 77.000
+	Bin 12: carico = 94.000, oggetti = ['O11', 'O02']
+	Oggetto O11: frammento = 17.000
+	Oggetto O02: frammento = 77.000
+	Bin 13: carico = 85.000, oggetti = ['O10', 'O04']
+	Oggetto O10: frammento = 72.000
+	Oggetto O04: frammento = 13.000
+	Bin 14: carico = 84.000, oggetti = ['O24', 'O18']
+	Oggetto O24: frammento = 46.000
+	Oggetto O18: frammento = 38.000
+	Bin 15: carico = 68.000, oggetti = ['O19', 'O05']
+	Oggetto O19: frammento = 22.000
+	Oggetto O05: frammento = 46.000
+	Bin 16: carico = 63.000, oggetti = ['O23', 'O31']
+	Oggetto O23: frammento = 17.000
+	Oggetto O31: frammento = 46.000
+	Bin 17: carico = 53.000, oggetti = ['O27', 'O30']
+	Oggetto O27: frammento = 29.000
+	Oggetto O30: frammento = 24.000
+	Bin 18: carico = 52.000, oggetti = ['O25', 'O03']
+	Oggetto O25: frammento = 26.000
+	Oggetto O03: frammento = 26.000
+	Bin 19: carico = 29.000, oggetti = ['O32', 'O16']
+	Oggetto O32: frammento = 6.000
+	Oggetto O16: frammento = 23.000
+	Bin 20: carico = 15.000, oggetti = ['O06', 'O22']
+	Oggetto O06: frammento = 12.000
+	Oggetto O22: frammento = 3.000
+
+========== CONFRONTO GAP ==========
+First Fit: 24 bin, 0.000286 s
+Next Fit:  32 bin, 0.000107 s
+Multi-Start + Ricerca Locale: 20 bin, 0.696013 s
+Iterated Local Search: 20 bin, 0.444448 s
+MILP non risolto: benchmark MILP non disponibile; GAP non calcolato.
