@@ -644,10 +644,254 @@ def multi_start_first_fit(V, w, W, E, iterazioni=100, seme=42, usa_ricerca_local
     return migliore_costruita, migliore_finale, tempo, miglioramenti_locali
 
 
+# ============================================================
+# META-EURISTICA ILS: PERTURBAZIONE
+# ============================================================
+
+def perturbazione_ils(bins, W, E, generatore, num_bin_perturbati=3):
+    """
+    Perturba una soluzione ammissibile del BPPC-IF.
+
+    Seleziona casualmente alcuni bin, rimuove i loro frammenti
+    e prova a reinserirli negli altri bin disponibili.
+
+    Se lo spazio non è sufficiente, apre nuovi bin.
+
+    La perturbazione può generare una soluzione peggiore
+    rispetto a quella iniziale: questo è consentito in ILS.
+
+    Parametri:
+    - bins: soluzione corrente
+    - W: capacità di ogni bin
+    - E: insieme delle coppie di oggetti in conflitto
+    - generatore: generatore di numeri casuali
+    - num_bin_perturbati: numero di bin da rimuovere
+
+    Restituisce:
+    - nuova: soluzione perturbata
+    """
+
+    # Controllo dei parametri.
+    if num_bin_perturbati < 1:
+        raise ValueError("num_bin_perturbati deve essere almeno 1")
+
+    if not bins:
+        raise ValueError("La soluzione da perturbare non può essere vuota")
+
+    # Non posso selezionare più bin di quelli esistenti.
+    quanti = min(num_bin_perturbati, len(bins))
+
+    # Scelgo casualmente quali bin rimuovere. sample() seleziona indici distinti, senza ripetizioni.
+    indici = set(generatore.sample(range(len(bins)), quanti))
+
+    # Copio tutti i bin NON selezionati. Uso dict(b) per non modificare la soluzione originale.
+    nuova = [dict(b) for j, b in enumerate(bins) if j not in indici]
+
+    # Raccolgo tutti i frammenti contenuti nei bin rimossi. Ogni elemento è una coppia (oggetto, quantità).
+    frammenti = [(i, quantita) for j in indici for i, quantita in bins[j].items()]
+
+    # Cambio casualmente l'ordine di reinserimento.
+    generatore.shuffle(frammenti)
+
+    # Costruisco le liste di incompatibilità.
+    conflitti = {i: set() for b in bins for i in b}
+
+    for i, k in E:
+        conflitti[i].add(k)
+        conflitti[k].add(i)
+
+    # Reinserisco i frammenti nella soluzione.
+    for i, quantita in frammenti:
+        # Quantità dell'oggetto ancora da collocare.
+        resto = quantita
+        # Considero i bin rimasti in ordine casuale.
+        ordine_bin = list(range(len(nuova)))
+        generatore.shuffle(ordine_bin)
+
+        for j in ordine_bin:
+            # Se il frammento è stato assegnato interamente, non devo cercare altri bin.
+            if resto <= EPS:
+                break
+            
+            b = nuova[j]
+            # Il bin non è utilizzabile se contiene un oggetto in conflitto con i.
+            if conflitti[i] & b.keys():
+                continue
+
+            # Capacità residua del bin.
+            libero = W - sum(b.values())
+            if libero <= EPS:
+                continue
+
+            # Inserisco la massima quantità possibile.
+            q = min(libero, resto)
+
+            # Se l'oggetto è già presente nel bin, sommo il nuovo frammento a quello esistente.
+            b[i] = b.get(i, 0.0) + q
+
+            # Aggiorno la quantità ancora da assegnare.
+            resto -= q
+
+        # Se rimane del peso non assegnato, apro uno o più nuovi bin.
+        while resto > EPS:
+            q = min(W, resto)
+            nuova.append({i: q})
+            resto -= q
+
+    # Riordino i bin per carico decrescente.
+    nuova.sort(key=lambda b: -sum(b.values()))
+
+    return nuova
+
+
+# ============================================================
+# META-EURISTICA ILS: CRITERIO DI ACCETTAZIONE
+# ============================================================
+
+def accetta_soluzione_ils(candidata, corrente, generatore, probabilita_peggiori=0.10):
+    """
+    Decide se la soluzione candidata diventa la nuova
+    soluzione corrente dell'ILS.
+
+    Parametri:
+    - candidata: soluzione ottenuta dopo perturbazione e Local Search
+    - corrente: soluzione dalla quale siamo partiti
+    - generatore: generatore di numeri casuali
+    - probabilita_peggiori: probabilità di accettare
+      una soluzione con più bin della corrente
+
+    Restituisce:
+    - True se la candidata viene accettata
+    - False altrimenti
+    """
+
+    # La probabilità deve essere compresa tra 0 e 1.
+    if not 0 <= probabilita_peggiori <= 1:
+        raise ValueError("probabilita_peggiori deve essere compresa tra 0 e 1")
+
+    # Accetto sempre le soluzioni migliori o equivalenti in termini di numero di bin utilizzati.
+    if len(candidata) <= len(corrente):
+        return True
+
+    # Se la soluzione è peggiorativa, genero un numero casuale compreso tra 0 e 1.
+    # Accetto la soluzione soltanto se il valore casuale è inferiore alla probabilità stabilita.
+    return generatore.random() < probabilita_peggiori
+
+# ============================================================
+# META-EURISTICA: ITERATED LOCAL SEARCH
+# ============================================================
+
+def ils(V, w, W, E, iterazioni=100, seme=42, num_bin_perturbati=3, probabilita_peggiori=0.10, max_tentativi=5, max_mosse=30):
+    """
+    Implementazione della metaeuristica Iterated Local Search.
+
+    Procedura:
+    1. Costruisco una soluzione iniziale con First Fit Decreasing.
+    2. Applico la ricerca locale combinata.
+    3. Perturbo la soluzione corrente.
+    4. Applico nuovamente la ricerca locale.
+    5. Aggiorno la migliore soluzione trovata.
+    6. Decido se accettare la candidata.
+    7. Ripeto fino al numero massimo di iterazioni.
+
+    Parametri:
+    - V, w, W, E: dati dell'istanza BPPC-IF
+    - iterazioni: numero di iterazioni ILS
+    - seme: seme del generatore casuale
+    - num_bin_perturbati: numero di bin coinvolti
+      in ogni perturbazione
+    - probabilita_peggiori: probabilità di accettare
+      una soluzione che utilizza più bin
+    - max_tentativi: tentativi per bin in Bin Elimination
+    - max_mosse: massimo numero di mosse Fragment Relocation
+
+    Restituisce:
+    - iniziale: soluzione First Fit Decreasing
+    - migliore: migliore soluzione ILS
+    - tempo: tempo totale di esecuzione
+    - miglioramenti: aggiornamenti della migliore soluzione
+    - peggioramenti_accettati: numero di soluzioni peggiorative
+      accettate come nuove soluzioni correnti
+    """
+
+    # Controllo dei parametri.
+    if iterazioni < 1:
+        raise ValueError("Le iterazioni ILS devono essere positive")
+
+    if max_tentativi < 1 or max_mosse < 0:
+        raise ValueError("Parametri di ricerca locale non validi")
+
+    if num_bin_perturbati < 1:
+        raise ValueError("num_bin_perturbati deve essere positivo")
+
+    if not 0 <= probabilita_peggiori <= 1:
+        raise ValueError("probabilita_peggiori deve essere tra 0 e 1")
+
+    # Creo un generatore pseudo-casuale con seme fissato.
+    generatore = random.Random(seme)
+
+    # Avvio il cronometro.
+    t0 = time.perf_counter()
+
+    # FASE 1: COSTRUZIONE DELLA SOLUZIONE INIZIALE
+    # Utilizzo First Fit Decreasing già implementato.
+    iniziale = first_fit(V, w, W, E, "decrescente")
+
+    # FASE 2: PRIMA RICERCA LOCALE
+    # Applico Bin Elimination e Fragment Relocation.
+    corrente = ricerca_locale_combinata(iniziale, V, w, W, E, generatore, max_tentativi, max_mosse)
+
+    # Memorizzo la migliore soluzione trovata finora. Deve essere una copia indipendente dalla corrente.
+    migliore = [dict(b) for b in corrente]
+
+    # Contatori per l'analisi sperimentale.
+    miglioramenti = 0
+    peggioramenti_accettati = 0
+
+    # FASE 3: CICLO PRINCIPALE ILS
+    for _ in range(iterazioni):
+
+        # 3A. Perturbo la soluzione corrente, non necessariamente la migliore trovata.
+        perturbata = perturbazione_ils(corrente, W, E, generatore, num_bin_perturbati)
+
+        # Verifico che la perturbazione sia ammissibile.
+        errori = verifica_soluzione_euristica(perturbata, V, w, W, E)
+
+        if errori:
+            raise RuntimeError("Perturbazione ILS non ammissibile: " + str(errori))
+
+        # 3B. Applico la ricerca locale alla soluzione perturbata.
+        candidata = ricerca_locale_combinata(perturbata, V, w, W, E, generatore, max_tentativi, max_mosse)
+
+        # Verifico anche la soluzione dopo la ricerca locale.
+        errori = verifica_soluzione_euristica(candidata, V, w, W, E)
+
+        if errori:
+            raise RuntimeError("ILS non ammissibile: " + str(errori))
+
+        # 3C. Aggiorno la migliore soluzione globale. Questo controllo è indipendente dall'accettazione.
+        if len(candidata) < len(migliore):
+
+            migliore = [dict(b) for b in candidata]
+
+            miglioramenti += 1
+
+        # 3D. Decido se continuare dalla soluzione candidata.
+        if accetta_soluzione_ils(candidata, corrente, generatore, probabilita_peggiori):
+            # Registro le accettazioni peggiorative.
+            if len(candidata) > len(corrente):
+                peggioramenti_accettati += 1
+            # La candidata diventa la nuova soluzione corrente.
+            corrente = candidata
+
+    # FASE 4: RISULTATI FINALI
+    tempo = time.perf_counter() - t0
+    return ( iniziale, migliore, tempo, miglioramenti, peggioramenti_accettati )
+
 
 def main():
     # E' necessario cambiare nome dell'istanza e del file di output a seconda dei casi.
-    file_input = "istanza_04_SI.json"
+    file_input = "istanza_09_OS2.json"
     time_limit = 300
     ordine = "decrescente"  # inserire "input", "decrescente", "conflitti" a seconda dell'euristica da testare
     file_output = "risultati_BPPC-IF.txt"
@@ -656,6 +900,11 @@ def main():
     seme_ms = 42         # Seme per rendere riproducibili i risultati
     tentativi_ls = 5     # Tentativi di eliminazione per ciascun bin
     mosse_fr = 30       # Numero massimo di mosse per la ricerca locale di frammenti
+    # Parametri ILS
+    iterazioni_ils = 100
+    seme_ils = 42   # Seme per rendere riproducibili le scelte casuali.
+    bin_perturbati_ils = 3       # Numero di bin da rimuovere e reinserire durante ogni perturbazione.
+    probabilita_peggiori_ils = 0.10     # Probabilità di accettare una soluzione peggiorativa. 0.10 equivale al 10%.
 
 
     V, w, W, E, U = leggi_istanza(file_input)
@@ -732,24 +981,62 @@ def main():
     righe.append(f"Numero massimo di mosse per frammenti = {mosse_fr}")
 
     # Migliore soluzione prima della ricerca locale
-    righe.append(
-        f"Miglior First Fit randomizzato = {len(bins_ms_base)} bin")
+    righe.append(f"Miglior First Fit randomizzato = {len(bins_ms_base)} bin")
 
     # Migliore soluzione dopo la ricerca locale
-    righe.append(
-        f"Miglior Multi-Start + ricerca locale = {len(bins_ms)} bin")
+    righe.append(f"Miglior Multi-Start + ricerca locale = {len(bins_ms)} bin")
 
     # Numero di partenze migliorate dalla ricerca locale
-    righe.append(f"Partenze migliorate dalla ricerca locale = " f"{miglioramenti_ls}/{iterazioni_ms}")
+    righe.append(f"Partenze migliorate dalla ricerca locale = {miglioramenti_ls}/{iterazioni_ms}")
 
     # Utilizzo la funzione di output già presente per stampare anche i dettagli della soluzione Multi-Start.
     righe += prepara_output_euristica( "Multi-Start + Ricerca Locale", bins_ms, V, w, W, E, tempo_ms, "casuale")
+    
+    
+    # ============================================================
+    # RISOLUZIONE CON ITERATED LOCAL SEARCH (ILS)
+    # ============================================================
+
+    # Eseguo ILS partendo da First Fit Decreasing. L'algoritmo applica la ricerca locale iniziale, quindi ripete perturbazione, ricerca locale e accettazione.
+
+    bins_ils_iniziale, bins_ils, tempo_ils, miglioramenti_ils, peggioramenti_ils = ils(
+        V, w, W, E,
+        iterazioni=iterazioni_ils,
+        seme=seme_ils,
+        num_bin_perturbati=bin_perturbati_ils,
+        probabilita_peggiori=probabilita_peggiori_ils,
+        max_tentativi=tentativi_ls,
+        max_mosse=mosse_fr
+    )
+
+    # Preparo il riepilogo dei risultati.
+    righe += ["", "========== ITERATED LOCAL SEARCH =========="]
+
+    # Riporto i parametri usati nell'esperimento.
+    righe.append(f"Numero iterazioni ILS = {iterazioni_ils}")
+    righe.append(f"Seme casuale = {seme_ils}")
+    righe.append(f"Bin perturbati per iterazione = {bin_perturbati_ils}")
+    righe.append(f"Probabilità accettazione peggioramenti = {probabilita_peggiori_ils:.2f}")
+
+    # Risultati dell'esecuzione.
+    righe.append(f"Soluzione iniziale FFD = {len(bins_ils_iniziale)} bin")
+
+    righe.append(f"Migliore soluzione ILS = {len(bins_ils)} bin")
+
+    righe.append(f"Numero di miglioramenti globali = {miglioramenti_ils}")
+
+    righe.append(f"Numero di peggioramenti accettati = {peggioramenti_ils}")
+
+    # Utilizzo la funzione già presente per stampare i dettagli della migliore soluzione trovata da ILS.
+    righe += prepara_output_euristica("Iterated Local Search", bins_ils, V, w, W, E, tempo_ils, "FFD + perturbazione + ricerca locale")
+
 
     # Confronto: GAP rispetto al MILP SOLO se l'ottimalità è certificata.
     righe += ["", "========== CONFRONTO GAP =========="]
     righe.append(f"First Fit: {len(bins_ff)} bin, {tempo_ff:.6f} s")
     righe.append(f"Next Fit:  {len(bins_nf)} bin, {tempo_nf:.6f} s")
     righe.append(f"Multi-Start + Ricerca Locale: {len(bins_ms)} bin, {tempo_ms:.6f} s")
+    righe.append(f"Iterated Local Search: {len(bins_ils)} bin, {tempo_ils:.6f} s")
     # Calcolo il GAP soltanto quando il MILP ha restituito
     # un risultato e Xpress ha certificato l'ottimalità.
     if (results is not None and results.solver.termination_condition == TerminationCondition.optimal):
@@ -762,6 +1049,8 @@ def main():
                 righe.append(f"GAP Next Fit  = {(len(bins_nf) - z_ottimo) / z_ottimo * 100:.2f}%")
             if not verifica_soluzione_euristica(bins_ms, V, w, W, E):
                 righe.append(f"GAP Multi-Start + Ricerca Locale = {(len(bins_ms) - z_ottimo) / z_ottimo * 100:.2f}%")
+            if not verifica_soluzione_euristica(bins_ils, V, w, W, E):
+                righe.append(f"GAP Iterated Local Search = {(len(bins_ils) - z_ottimo) / z_ottimo * 100:.2f}%")
     else:
         if results is None:
             righe.append("MILP non risolto: benchmark MILP non disponibile; GAP non calcolato.")
